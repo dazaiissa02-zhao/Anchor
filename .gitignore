@@ -1,0 +1,21 @@
+.DS_Store
+
+# Build outputs
+dist/
+.build/
+DerivedData/
+
+# Xcode / Swift local state
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# Local app data and exports
+anchor-data.json
+*.local.json
+*.log
+
+# Editor temp files
+*.swp
+*.swo
+*~
