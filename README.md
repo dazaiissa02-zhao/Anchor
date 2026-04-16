@@ -80,8 +80,15 @@ The data file is intentionally not part of this repository.
 ├── Info.plist
 ├── Sources/
 │   ├── AppDelegate.swift
+│   ├── AppDelegateActions.swift
+│   ├── AppDelegateMenu.swift
+│   ├── AppDelegateSession.swift
 │   ├── CaptureWindowController.swift
+│   ├── Constants.swift
+│   ├── DataStore.swift
+│   ├── HotKeyCenter.swift
 │   ├── MainWindowController.swift
+│   ├── Models.swift
 │   ├── UIHelpers.swift
 │   └── main.swift
 ├── build.sh

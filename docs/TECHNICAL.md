@@ -23,14 +23,18 @@ The code has been split out of the original single-file prototype, but the bound
 
 Current source files include:
 
-- `AppDelegate`
-- `DataStore`
-- `Models`
-- `MainWindowController`
-- `CaptureWindowController`
-- `ReviewCheckpoint`
-- `ReminderEngine`
-- `UIComponents`
+- `AppDelegate`: app launch, menu bar bootstrap, notification delegate
+- `AppDelegateActions`: notifications, window presentation, global refresh
+- `AppDelegateMenu`: menu bar icon, status menu, menu commands
+- `AppDelegateSession`: timer, session transitions, thought parking, reminders
+- `CaptureWindowController`: thought drawer and parked-thought list
+- `Constants`: timing and color constants
+- `DataStore`: local JSON persistence
+- `HotKeyCenter`: `Option + Command + J` global shortcut
+- `MainWindowController`: main anchor window, planning, running, and review states
+- `Models`: Codable domain models
+- `UIHelpers`: shared AppKit view helpers
+- `main`: app entry point
 
 ## Persistence
 
