@@ -13,15 +13,15 @@ There is no package manager or Xcode project yet.
 
 ## Entry Point
 
-All app code currently lives in:
+App code currently lives in:
 
 ```text
-Sources/main.swift
+Sources/
 ```
 
-This is acceptable for the prototype, but it should be split once the behavior stabilizes.
+The code has been split out of the original single-file prototype, but the boundaries are still early.
 
-Suggested future modules:
+Current source files include:
 
 - `AppDelegate`
 - `DataStore`
@@ -92,7 +92,7 @@ It also places a placeholder file in `Contents/Resources` so ad-hoc signing beha
 
 ## Current Technical Debt
 
-- `Sources/main.swift` is too large.
+- Source boundaries are still rough.
 - UI helpers are mixed with product logic.
 - Review, reminders, and persistence need clearer boundaries.
 - There are no automated tests.

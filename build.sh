@@ -16,7 +16,7 @@ swiftc \
   -framework AppKit \
   -framework Carbon \
   -framework UserNotifications \
-  "$ROOT/Sources/main.swift" \
+  "$ROOT/Sources/"*.swift \
   -o "$MACOS/Anchor"
 
 chmod +x "$MACOS/Anchor"

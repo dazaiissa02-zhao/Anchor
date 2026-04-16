@@ -79,6 +79,10 @@ The data file is intentionally not part of this repository.
 .
 ├── Info.plist
 ├── Sources/
+│   ├── AppDelegate.swift
+│   ├── CaptureWindowController.swift
+│   ├── MainWindowController.swift
+│   ├── UIHelpers.swift
 │   └── main.swift
 ├── build.sh
 ├── docs/
