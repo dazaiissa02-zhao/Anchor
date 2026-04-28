@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anchor Design Sketch</title>
+  <style>
+    :root {
+      --desk: #eceae0;
+      --paper: #faf9f5;
+      --paper-deep: #f5f4ed;
+      --ink: #141413;
+      --muted: #504e49;
+      --quiet: #6b6a64;
+      --line: #e8e6dc;
+      --amber: #1B365D;
+      --amber-soft: #E4ECF5;
+      --clay: #1B365D;
+      --danger: #9b4c3f;
+      --shadow: 0 24px 80px rgba(27, 54, 93, 0.10);
+      --soft-shadow: 0 14px 36px rgba(27, 54, 93, 0.07);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 15px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 8%, rgba(250, 249, 245, 0.95), transparent 30%),
+        radial-gradient(circle at 92% 16%, rgba(27, 54, 93, 0.06), transparent 26%),
+        linear-gradient(135deg, #f0efe8 0%, var(--desk) 48%, #e5e3d8 100%);
+      font-family: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", Georgia, serif;
+      line-height: 1.45;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 72px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+      max-width: 720px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 520px;
+    }
+
+    .section-title {
+      margin: 56px 0 18px;
+      color: var(--clay);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .stage {
+      position: relative;
+      padding: 30px;
+      border: 1px solid rgba(118, 85, 42, 0.12);
+      border-radius: var(--radius-xl);
+      background: rgba(255, 250, 240, 0.4);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+      overflow: hidden;
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(118, 85, 42, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(118, 85, 42, 0.03) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, black, transparent 88%);
+    }
+
+    .window,
+    .popover,
+    .floating,
+    .panel {
+      position: relative;
+      z-index: 1;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.40), transparent 46%),
+        var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .window {
+      width: min(860px, 100%);
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: var(--radius-xl);
+    }
+
+    .window.wide {
+      width: min(980px, 100%);
+    }
+
+    .titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .state {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .star {
+      color: var(--amber);
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .link {
+      color: var(--muted);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .anchor-card {
+      min-height: 330px;
+      display: grid;
+      place-items: center;
+      padding: 46px 48px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(27, 54, 93, 0.06), transparent 34%),
+        linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+      box-shadow: var(--soft-shadow);
+      text-align: center;
+    }
+
+    .anchor-card.compact {
+      min-height: 285px;
+      text-align: left;
+      place-items: stretch;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .anchor-title {
+      margin: 24px auto;
+      max-width: 100%;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.05;
+      letter-spacing: -0.055em;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .timer {
+      color: var(--amber);
+      font-size: 42px;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+    }
+
+    .return-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .note-card {
+      min-height: 86px;
+      padding: 15px 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--paper-deep);
+      box-shadow: 0 10px 24px rgba(80, 58, 32, 0.08);
+    }
+
+    .note-card h3 {
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .note-card strong {
+      display: block;
+      font-size: 21px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .note-card span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .button {
+      min-width: 126px;
+      padding: 12px 18px;
+      border: 1px solid rgba(27, 54, 93, 0.14);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 8px 18px rgba(27, 54, 93, 0.06);
+      font: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .button.primary {
+      border-color: rgba(27, 54, 93, 0.30);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 48%),
+        linear-gradient(180deg, #2D5A8A, #1B365D);
+      color: #faf9f5;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 10px 22px rgba(27, 54, 93, 0.18);
+    }
+
+    .button.ghost {
+      background: transparent;
+      box-shadow: none;
+      color: var(--muted);
+    }
+
+    .button.subtle {
+      border-color: rgba(96, 73, 42, 0.12);
+      background: rgba(255, 250, 240, 0.52);
+      box-shadow: none;
+      color: var(--muted);
+    }
+
+    .button.danger {
+      color: var(--danger);
+      background: rgba(155, 76, 63, 0.08);
+      box-shadow: none;
+    }
+
+    .quiet-action {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .form {
+      display: grid;
+      gap: 18px;
+      width: min(680px, 100%);
+      margin: 0 auto;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .input {
+      min-height: 62px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: #fffdf7;
+      color: var(--quiet);
+      font-size: 18px;
+    }
+
+    .choice-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fffaf0;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .chip.selected {
+      color: var(--amber);
+      background: var(--amber-soft);
+      border-color: rgba(27, 54, 93, 0.18);
+    }
+
+    .floating-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 26px;
+      align-items: start;
+    }
+
+    .popover {
+      width: 300px;
+      padding: 18px;
+      border-radius: 22px;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .popover h3 {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 16px;
+    }
+
+    .popover .current {
+      margin: 14px 0;
+      font-size: 22px;
+      line-height: 1.12;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    .popover .minor {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .dock-entry {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .dock-entry .dock-icon {
+      color: var(--quiet);
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .capture {
+      width: min(440px, 100%);
+      padding: 22px;
+      border-radius: 26px;
+    }
+
+    .capture h3,
+    .panel h3 {
+      margin-bottom: 16px;
+      font-size: 22px;
+      letter-spacing: -0.04em;
+    }
+
+    .capture-input {
+      height: 112px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: #fffdf8;
+      color: var(--quiet);
+      font-size: 17px;
+    }
+
+    .capture-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 15px 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .low-link {
+      color: var(--muted);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+
+    .thought-list {
+      display: grid;
+      gap: 9px;
+      max-height: 180px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      overflow: auto;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .thought {
+      padding: 11px 12px;
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    .panel {
+      padding: 24px;
+      border-radius: var(--radius-xl);
+    }
+
+    .review-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .textarea {
+      min-height: 170px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: #fffdf8;
+    }
+
+    .review-item {
+      position: relative;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .review-item p {
+      margin-right: 38px;
+      font-size: 16px;
+    }
+
+    .hidden-menu {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(96, 73, 42, 0.1);
+      border-radius: 999px;
+      color: var(--quiet);
+      background: rgba(255, 250, 240, 0.54);
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .small-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .small-actions .button {
+      min-width: auto;
+      padding: 8px 11px;
+      font-size: 13px;
+      box-shadow: none;
+    }
+
+    .continue-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .button.split {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 164px;
+    }
+
+    .button .caret {
+      color: rgba(39, 34, 27, 0.52);
+      font-size: 12px;
+      transform: translateY(1px);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .day-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--paper-deep);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 24px;
+      letter-spacing: -0.04em;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 145px 1fr auto;
+      gap: 16px;
+      align-items: start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.48);
+    }
+
+    .time {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .timeline-row h3 {
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+
+    .timeline-row p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .badge {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--amber-soft);
+      color: var(--clay);
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .inbox-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .inbox-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .inbox-row p {
+      font-size: 16px;
+    }
+
+    @media (max-width: 780px) {
+      .page {
+        width: min(100% - 18px, 1180px);
+        padding-top: 26px;
+      }
+
+      .hero,
+      .floating-grid,
+      .review-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .stage {
+        padding: 14px;
+      }
+
+      .window,
+      .panel {
+        padding: 16px;
+        border-radius: 22px;
+      }
+
+      .anchor-card {
+        min-height: 280px;
+        padding: 28px 18px;
+      }
+
+      .meta-grid,
+      .day-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-row,
+      .inbox-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <h1>Anchor<br>视觉草图</h1>
+      </div>
+      <p>温暖纸张式小型仪表盘。当前锚点是主角，念头被接住，处理留到复盘。</p>
+    </section>
+
+    <h2 class="section-title">Main Window / Focusing</h2>
+    <section class="stage">
+      <div class="window wide">
+        <div class="titlebar">
+          <div class="state"><span class="star">★</span>当前锚定中</div>
+          <a class="link" href="#">今日回顾 ›</a>
+        </div>
+
+        <div class="anchor-card">
+          <div>
+            <div class="eyebrow">现在只做</div>
+            <div class="anchor-title">写 Anchor 的下一版桌面体验</div>
+            <div class="timer">18:42</div>
+            <div class="return-note">回来时：先完成主窗口草图</div>
+          </div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="note-card">
+            <h3>今天</h3>
+            <strong>4 段 · 2h15m</strong>
+            <span>12 条停靠 · 3 个产出</span>
+          </div>
+          <div class="note-card">
+            <h3>收件箱</h3>
+            <strong>6 条念头</strong>
+            <span>稍后处理</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <div class="button subtle">停靠想法</div>
+          <div class="button">暂停</div>
+          <div class="button">结束并复盘</div>
+        </div>
+        <div class="quiet-action">放下当前锚点</div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Main Window / Idle</h2>
+    <section class="stage">
+      <div class="window wide">
+        <div class="titlebar">
+          <div class="state"><span class="star">☆</span>待锚定</div>
+          <a class="link" href="#">今日回顾 ›</a>
+        </div>
+
+        <div class="anchor-card compact">
+          <div class="form">
+            <div class="eyebrow">现在想守住什么？</div>
+            <div class="field">
+              <label>当前锚点</label>
+              <div class="input">整理 Anchor 的下一版体验</div>
+            </div>
+            <div class="field">
+              <label>回来时</label>
+              <div class="input">先画出主窗口运行态</div>
+            </div>
+            <div class="choice-row">
+              <div class="chips">
+                <div class="chip">15</div>
+                <div class="chip selected">25</div>
+                <div class="chip">45</div>
+                <div class="chip">60</div>
+              </div>
+              <div class="button primary">开始锚定</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="note-card">
+            <h3>今天</h3>
+            <strong>还没有锚定</strong>
+            <span>从一件事开始</span>
+          </div>
+          <div class="note-card">
+            <h3>收件箱</h3>
+            <strong>3 条念头</strong>
+            <span>可整理、转锚点</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <div class="button">停靠想法</div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Menu Bar Hover + Capture</h2>
+    <section class="stage">
+      <div class="floating-grid">
+        <div>
+          <div class="popover">
+            <h3><span class="star">★</span>正在锚定</h3>
+            <div class="current">写 Anchor 的下一版体验</div>
+            <div class="minor">还剩 18 分钟</div>
+            <div class="dock-entry"><span class="dock-icon">✦</span>停靠想法</div>
+          </div>
+        </div>
+
+        <div class="window capture">
+          <h3>✦ 停靠想法</h3>
+          <div class="capture-input">输入一个突然冒出来的想法...</div>
+          <div class="capture-meta">
+            <span>保存到：写 Anchor 的下一版体验</span>
+          </div>
+          <div class="button primary" style="width:100%">停靠</div>
+          <div class="capture-meta">
+            <span>已停靠 3 条</span>
+            <span class="low-link">查看</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Capture / Expanded + Saved</h2>
+    <section class="stage">
+      <div class="floating-grid">
+        <div class="window capture">
+          <h3>✦ 停靠想法</h3>
+          <div class="capture-input">输入一个突然冒出来的想法...</div>
+          <div class="capture-meta">
+            <span>已停靠 3 条</span>
+            <span class="low-link">收起</span>
+          </div>
+          <div class="thought-list">
+            <div class="thought">菜单栏 hover 只显示当前锚点</div>
+            <div class="thought">停靠浮窗应该像小碟子</div>
+            <div class="thought">今日回顾要看每段花了多久</div>
+          </div>
+        </div>
+
+        <div class="window capture">
+          <h3>✦ 已停靠</h3>
+          <div class="anchor-card" style="min-height:210px;padding:26px">
+            <div>
+              <div class="eyebrow">已经接住了</div>
+              <div class="return-note" style="font-size:20px;color:var(--ink)">回到：写 Anchor 的下一版体验</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Checkpoint</h2>
+    <section class="stage">
+      <div class="panel">
+        <div class="titlebar">
+          <div class="state"><span class="star">✦</span>Checkpoint</div>
+          <span class="link">25m</span>
+        </div>
+
+        <h3>写 Anchor 的下一版桌面体验</h3>
+        <div class="review-layout">
+          <div>
+            <div class="field">
+              <label>产出</label>
+              <div class="textarea"></div>
+            </div>
+          </div>
+          <div>
+            <div class="field">
+              <label>停靠想法 3 条</label>
+            </div>
+            <div class="thought-list" style="max-height:none;margin-top:0;padding-top:0;border-top:0">
+              <div class="review-item">
+                <p>菜单栏 hover 只显示当前锚点</p>
+                <div class="hidden-menu">···</div>
+              </div>
+              <div class="review-item">
+                <p>停靠浮窗应该像小碟子</p>
+                <div class="hidden-menu">···</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="continue-row">
+          <div class="button primary split">继续 15 分钟 <span class="caret">⌄</span></div>
+          <div class="button">完成复盘</div>
+          <div class="button danger">放下它</div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Today Review</h2>
+    <section class="stage">
+      <div class="panel">
+        <div class="titlebar">
+          <div class="state">今日回顾</div>
+          <span class="link">4 月 16 日，星期四</span>
+        </div>
+
+        <div class="day-summary">
+          <div class="metric">
+            <span>今天守住了</span>
+            <strong>4 段</strong>
+          </div>
+          <div class="metric">
+            <span>总锚定时间</span>
+            <strong>2h15m</strong>
+          </div>
+          <div class="metric">
+            <span>停靠 / 产出</span>
+            <strong>12 / 3</strong>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-row">
+            <div class="time">09:30 - 09:55</div>
+            <div>
+              <h3>写 Anchor 的下一版体验</h3>
+              <p>产出：完成主窗口草图 · 停靠 3 条</p>
+            </div>
+            <div class="badge">25m</div>
+          </div>
+          <div class="timeline-row">
+            <div class="time">10:20 - 10:45</div>
+            <div>
+              <h3>修改 README 和产品说明</h3>
+              <p>产出：明确产品定位 · 停靠 2 条</p>
+            </div>
+            <div class="badge">25m</div>
+          </div>
+          <div class="timeline-row">
+            <div class="time">14:10 - 14:22</div>
+            <div>
+              <h3>梳理复盘流程</h3>
+              <p>已放下 · 停靠 1 条</p>
+            </div>
+            <div class="badge">12m</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <div class="button">处理收件箱</div>
+          <div class="button ghost">导出今日记录</div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Inbox</h2>
+    <section class="stage">
+      <div class="panel">
+        <div class="titlebar">
+          <div class="state">收件箱</div>
+          <span class="link">6 条念头</span>
+        </div>
+
+        <div class="inbox-list">
+          <div class="inbox-row">
+            <p>给第一次打开加一句本地数据说明</p>
+            <div class="small-actions">
+              <div class="button ghost">删除</div>
+              <div class="button primary">开始锚定</div>
+            </div>
+          </div>
+          <div class="inbox-row">
+            <p>今日回顾可以导出成 markdown</p>
+            <div class="small-actions">
+              <div class="button ghost">删除</div>
+              <div class="button primary">开始锚定</div>
+            </div>
+          </div>
+          <div class="inbox-row">
+            <p>菜单栏 hover 不要显示回来时提示</p>
+            <div class="small-actions">
+              <div class="button ghost">删除</div>
+              <div class="button primary">开始锚定</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
