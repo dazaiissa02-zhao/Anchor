@@ -19,7 +19,8 @@ extension AppDelegate {
         let session = store.state.sessions[index]
         if session.status == .running && remainingSeconds(session) <= 0 {
             fireReminder(title: "这一段结束了", body: "先记录产出，再处理停靠想法。")
-            finishSession()
+            finishSession(showWindow: false)
+            scheduleDelayedReviewPrompt()
             return
         }
 
@@ -135,7 +136,7 @@ extension AppDelegate {
         }
     }
 
-    func finishSession() {
+    func finishSession(showWindow: Bool = true) {
         guard let index = store.currentSessionIndex() else { return }
         if store.state.sessions[index].status == .paused, let pausedAt = store.state.sessions[index].pausedAt {
             store.state.sessions[index].totalPausedSeconds += Date().timeIntervalSince(pausedAt)
@@ -144,12 +145,25 @@ extension AppDelegate {
         store.state.sessions[index].status = .reviewing
         store.state.sessions[index].endedAt = Date()
         store.save()
-        showMainWindow()
+        if showWindow {
+            showMainWindow()
+        }
         refreshAll(message: "")
+    }
+
+    func scheduleDelayedReviewPrompt() {
+        delayedReviewWorkItem?.cancel()
+        let item = DispatchWorkItem { [weak self] in
+            guard let self, self.store.currentSession()?.status == .reviewing else { return }
+            self.showMainWindow()
+        }
+        delayedReviewWorkItem = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + 45, execute: item)
     }
 
     func completeReview(outputNote: String) {
         guard let index = store.currentSessionIndex() else { return }
+        delayedReviewWorkItem?.cancel()
         store.state.sessions[index].outputNote = outputNote.trimmingCharacters(in: .whitespacesAndNewlines)
         store.state.sessions[index].status = .completed
         store.state.sessions[index].endedAt = Date()
@@ -160,6 +174,7 @@ extension AppDelegate {
 
     func continueFromReview(minutes: Int = 15) {
         guard let index = store.currentSessionIndex(), store.state.sessions[index].status == .reviewing else { return }
+        delayedReviewWorkItem?.cancel()
         let elapsedMinutes = Int(ceil(elapsedSeconds(store.state.sessions[index]) / 60))
         store.state.sessions[index].durationMinutes = max(store.state.sessions[index].durationMinutes + minutes, elapsedMinutes + minutes)
         store.state.sessions[index].status = .running
@@ -171,6 +186,7 @@ extension AppDelegate {
 
     func abandonSession() {
         guard let index = store.currentSessionIndex() else { return }
+        delayedReviewWorkItem?.cancel()
         if store.state.sessions[index].status == .paused, let pausedAt = store.state.sessions[index].pausedAt {
             store.state.sessions[index].totalPausedSeconds += Date().timeIntervalSince(pausedAt)
             store.state.sessions[index].pausedAt = nil
