@@ -2,6 +2,22 @@
 
 This document gives any incoming agent the minimum product and implementation context needed to work on Anchor without re-deriving the current state from chat history.
 
+## First Read
+
+An incoming agent should usually read these files in this order:
+
+1. `docs/NEXT_AGENT.md`
+2. `docs/STATUS.md`
+3. `docs/AGENT_HANDOFF.md`
+4. `README.md`
+
+The rule is simple:
+
+- `NEXT_AGENT.md` holds short-lived execution state
+- `STATUS.md` holds current product status
+- `AGENT_HANDOFF.md` holds durable project context
+- chat history is helpful, but it is not the source of truth
+
 ## Product Snapshot
 
 - Product name: Anchor Desktop
@@ -124,6 +140,32 @@ Persistence and models:
 - Do not add nested popovers or nested modal flows unless there is no other option.
 - Prefer precise, calm labels over productivity jargon.
 - Preserve the warm paper / starlight visual direction unless explicitly changed by the user.
+
+## Window-Full Handoff Protocol
+
+When the current session is getting full, do not leave key context only in chat. Before switching to a new window:
+
+1. Update `docs/NEXT_AGENT.md` with:
+   - what was just finished
+   - what is in progress now
+   - the next recommended action
+   - any blockers, assumptions, or sharp edges
+2. If product state changed, update `docs/STATUS.md`.
+3. If durable product or implementation rules changed, update this file.
+4. Commit the changes and sync them to the repository.
+
+The goal is that a new agent can start from repository state, not from reconstructed chat memory.
+
+## Fast Start For A New Agent
+
+In most cases, a new agent should be able to start with this short loop:
+
+1. Read `docs/NEXT_AGENT.md`.
+2. Read `docs/STATUS.md`.
+3. Scan this file for durable constraints.
+4. Run `git status`.
+5. Run `git log --oneline -5`.
+6. Build with `./build.sh` if the task touches implementation.
 
 ## Recommended Next Priorities
 
