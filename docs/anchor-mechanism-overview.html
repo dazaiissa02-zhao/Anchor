@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anchor 机制总览</title>
+  <style>
+    :root {
+      --bg-a: #6c7486;
+      --bg-b: #9b7a75;
+      --bg-c: #7b95a6;
+      --paper: rgba(255, 250, 242, 0.82);
+      --paper-soft: rgba(255, 250, 242, 0.12);
+      --line: rgba(255, 255, 255, 0.16);
+      --line-strong: rgba(255, 220, 160, 0.38);
+      --text: #231f1a;
+      --muted: rgba(30, 26, 22, 0.62);
+      --quiet: rgba(255, 255, 255, 0.58);
+      --accent: #f1c15d;
+      --accent-soft: rgba(241, 193, 93, 0.22);
+      --shadow: 0 20px 60px rgba(16, 14, 22, 0.20);
+      --card-shadow: 0 12px 24px rgba(20, 15, 10, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: white;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(227, 173, 173, 0.32), transparent 22%),
+        radial-gradient(circle at 85% 20%, rgba(255, 208, 163, 0.18), transparent 18%),
+        radial-gradient(circle at 20% 72%, rgba(176, 95, 74, 0.28), transparent 24%),
+        radial-gradient(circle at 64% 58%, rgba(255, 255, 255, 0.10), transparent 18%),
+        linear-gradient(125deg, var(--bg-b) 0%, var(--bg-a) 42%, var(--bg-c) 100%);
+      font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+    }
+
+    .page {
+      width: min(1200px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 56px 0 72px;
+    }
+
+    .frame {
+      border: 1px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 34px;
+      padding: 38px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.46);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(34px, 5vw, 60px);
+      line-height: 1.04;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+    }
+
+    .summary {
+      margin: 18px 0 0;
+      max-width: 760px;
+      font-size: 17px;
+      line-height: 1.9;
+      color: rgba(255, 255, 255, 0.66);
+    }
+
+    .flow {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 44px;
+    }
+
+    .flow::before {
+      content: "";
+      position: absolute;
+      left: 13%;
+      right: 13%;
+      top: 44px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+      pointer-events: none;
+    }
+
+    .step {
+      position: relative;
+      min-height: 276px;
+      padding: 22px;
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.07));
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.72);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+    }
+
+    .step h2 {
+      margin: 24px 0 10px;
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .step .caption {
+      margin: 0;
+      font-size: 15px;
+      color: rgba(255,255,255,0.68);
+    }
+
+    .step .detail {
+      margin: 22px 0 0;
+      font-size: 15px;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.52);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .footer-card {
+      min-height: 118px;
+      padding: 20px 22px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .footer-card.primary {
+      background: linear-gradient(180deg, rgba(241, 193, 93, 0.16), rgba(255,255,255,0.06));
+      border-color: rgba(241, 193, 93, 0.22);
+    }
+
+    .footer-card h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .footer-card p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.64);
+    }
+
+    .footer-card.primary p {
+      color: rgba(255,255,255,0.82);
+    }
+
+    .accent {
+      color: #fff5d9;
+    }
+
+    @media (max-width: 880px) {
+      .page {
+        width: min(100% - 22px, 1200px);
+        padding: 24px 0 30px;
+      }
+
+      .frame {
+        padding: 22px;
+      }
+
+      .flow,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flow::before {
+        display: none;
+      }
+
+      .step {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="frame">
+      <p class="eyebrow">Product Mechanism</p>
+      <h1>把分心的瞬间，变成一个可回流的闭环</h1>
+      <p class="summary">
+        Anchor 不是任务管理器，而是一个保护专注深度的小系统：
+        先锚定当前，再停靠念头，最后在合适的时刻回流处理。
+      </p>
+
+      <div class="flow">
+        <article class="step">
+          <div class="step-number">01</div>
+          <h2>锚定当前</h2>
+          <p class="caption">定义此刻唯一要做的事</p>
+          <p class="detail">
+            用户先写下当前锚点，并留一句“回来时从哪里继续”。
+            这样注意力即使被打断，也始终知道该回到哪。
+          </p>
+        </article>
+
+        <article class="step">
+          <div class="step-number">02</div>
+          <h2>停靠念头</h2>
+          <p class="caption">快速接住分叉念头</p>
+          <p class="detail">
+            执行过程中冒出的新想法不在当下处理，
+            只被轻量记录。<span class="accent">接住</span> 和
+            <span class="accent">判断</span> 被刻意分开。
+          </p>
+        </article>
+
+        <article class="step">
+          <div class="step-number">03</div>
+          <h2>回流复盘</h2>
+          <p class="caption">在结束时统一回看</p>
+          <p class="detail">
+            时间结束后进入 Checkpoint，记录产出、整理念头，
+            决定继续、放下，或把其中一个变成下一段锚点。
+          </p>
+        </article>
+      </div>
+
+      <div class="footer-grid">
+        <article class="footer-card primary">
+          <h3>Mechanism</h3>
+          <p>
+            Anchor 的价值不在于管理所有任务，
+            而在于守住此刻最重要的这一件事。
+          </p>
+        </article>
+
+        <article class="footer-card">
+          <h3>收件箱</h3>
+          <p>未处理的念头先留在这里，等合适的时刻再决定去向。</p>
+        </article>
+
+        <article class="footer-card">
+          <h3>今日回顾</h3>
+          <p>让用户看见今天守住了哪些事，而不是只记得自己被打断过。</p>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
