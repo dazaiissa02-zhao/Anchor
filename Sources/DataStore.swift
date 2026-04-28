@@ -36,7 +36,9 @@ final class DataStore {
     }
 
     func inboxThoughts() -> [CapturedThought] {
-        state.thoughts.filter { $0.sessionId == "inbox" }
+        state.thoughts.filter {
+            $0.sessionId == "inbox" && ($0.status == .parked || $0.status == .later)
+        }
     }
 
     private static func load(from url: URL) -> AnchorState {
