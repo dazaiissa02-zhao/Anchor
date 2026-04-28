@@ -137,11 +137,22 @@ The data file is intentionally not part of this repository.
 │   └── main.swift
 ├── build.sh
 ├── docs/
+│   ├── AGENT_HANDOFF.md
+│   ├── NEXT_AGENT.md
 │   ├── PRODUCT.md
+│   ├── STATUS.md
 │   ├── TECHNICAL.md
 │   └── ROADMAP.md
 └── README.md
 ```
+
+## Agent Continuity
+
+To keep Anchor workable across many agent windows, repository files should carry the real handoff state:
+
+- `docs/NEXT_AGENT.md` for short-lived execution status
+- `docs/STATUS.md` for current product reality
+- `docs/AGENT_HANDOFF.md` for durable project rules and context
 
 ## Design Principle
 
